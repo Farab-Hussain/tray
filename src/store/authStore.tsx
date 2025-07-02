@@ -25,7 +25,7 @@ export const useAuthStore = create<AuthState>()(
       setLoading: loading => set({ isLoading: loading }),
     }),
     {
-      name: 'auth-storage', // Key in AsyncStorage
+      name: 'auth-storage',
       storage: createJSONStorage(() => AsyncStorage),
       partialize: state => ({
         user: state.user,

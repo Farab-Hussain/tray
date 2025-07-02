@@ -5,39 +5,49 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Modal,
-  FlatList,
   Dimensions,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
-import {
-  CheckCircle,
-  Eye,
-  EyeOff,
-  ChevronDown,
-  // LogoGoogle,
-  // Facebook,
-  // Apple,
-} from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
+import AuthFooter from '../common/AuthFooter';
+import { useAuthStore } from '../../store/authStore';
+import { loginRequest } from '../../services/authService';
 
 const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [selectedRole, setSelectedRole] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [email, setEmail] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState('');
-  const isEmailValid = email.includes('@') && email.includes('.');
-  const roleOptions = ['Admin', 'Student', 'Consultant'];
+  const [email, setEmail] = useState('alica@example.com');
+  const [password, setPassword] = useState('secure123');
+  const { login, setLoading, isLoading } = useAuthStore();
 
-  const handleRoleSelect = (role: string) => {
-    setSelectedRole(role);
-    setShowDropdown(false);
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      const { token, user } = await loginRequest(email, password);
+      login(user, token);
+
+      switch (user.role) {
+        case 'student':
+          navigation.navigate('DemoPage' as never);
+          break;
+        case 'consultant':
+          navigation.navigate('Consultant' as never);
+          break;
+        case 'admin':
+          navigation.navigate('AdminDashboard' as never);
+          break;
+        default:
+          Alert.alert('Unknown user role');
+      }
+    } catch (error) {
+      Alert.alert('Login Failed', 'Invalid email or password.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,143 +55,88 @@ const LoginScreen = () => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>Log in</Text>
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.contentContainer}>
+            <Text style={styles.title}>Log in</Text>
 
-          <View style={styles.formContainer}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.inputField}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              {isEmailValid && (
-                <CheckCircle size={22} color="green" style={styles.icon} />
-              )}
-            </View>
-
-            {/* Dropdown */}
-            <Text style={styles.label}>Role</Text>
-            <TouchableOpacity
-              style={styles.inputWrapper}
-              onPress={() => setShowDropdown(true)}
-              activeOpacity={0.8}
-            >
-              <Text
-                style={
-                  selectedRole
-                    ? styles.dropdownButtonText
-                    : styles.dropdownPlaceholder
-                }
-              >
-                {selectedRole || 'Select Role'}
-              </Text>
-              <ChevronDown size={22} color="gray" style={styles.icon} />
-            </TouchableOpacity>
-
-            {/* Dropdown Modal */}
-            <Modal
-              visible={showDropdown}
-              transparent={true}
-              animationType="fade"
-              onRequestClose={() => setShowDropdown(false)}
-            >
-              <TouchableOpacity
-                style={styles.modalOverlay}
-                onPress={() => setShowDropdown(false)}
-              >
-                <View style={styles.dropdownContainer}>
-                  <FlatList
-                    data={roleOptions}
-                    keyExtractor={item => item}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        style={styles.dropdownItem}
-                        onPress={() => handleRoleSelect(item)}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={styles.dropdownItemText}>{item}</Text>
-                      </TouchableOpacity>
-                    )}
-                  />
-                </View>
-              </TouchableOpacity>
-            </Modal>
-
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
+            <View style={styles.formContainer}>
+              <Text style={styles.label}>Email</Text>
               <View style={styles.inputWrapper}>
                 <TextInput
                   style={styles.inputField}
-                  placeholder="Password"
-                  secureTextEntry={!showPassword}
-                  value={password}
-                  onChangeText={setPassword}
+                  placeholder="Email"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <Eye size={22} color="gray" style={styles.icon} />
-                  ) : (
-                    <EyeOff size={22} color="gray" style={styles.icon} />
-                  )}
-                </TouchableOpacity>
               </View>
-            </View>
-            <TouchableOpacity style={styles.link}>
-              <Text
-                style={styles.linkText}
-                onPress={() => navigation.navigate('ForgotPassword' as never)}
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    style={styles.inputField}
+                    placeholder="Password"
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                </View>
+              </View>
+              <TouchableOpacity style={styles.link} accessibilityRole="button">
+                <Text
+                  style={styles.linkText}
+                  onPress={() => navigation.navigate('ForgotPassword' as never)}
+                >
+                  Forgot Password?
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, isLoading && { opacity: 0.5 }]}
+                accessibilityRole="button"
+                onPress={handleLogin}
+                disabled={isLoading}
               >
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
+                <Text style={styles.buttonText}>
+                  {isLoading ? 'Logging in...' : 'Log in'}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Log in</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.dividerContainer}>
+              <View style={styles.line} />
+              <TouchableOpacity style={styles.dividerTextContainer} accessibilityRole="button">
+                <Text style={styles.dividerText}>or login with</Text>
+              </TouchableOpacity>
+              <View style={styles.line} />
+            </View>
 
-          <View style={styles.dividerContainer}>
-            <View style={styles.line} />
-            <TouchableOpacity style={styles.dividerTextContainer}>
-              <Text style={styles.dividerText}>or login with</Text>
-            </TouchableOpacity>
-            <View style={styles.line} />
+            <View style={styles.socialContainer}>
+              <TouchableOpacity style={styles.socialButton}>
+                {/* <LogoGoogle size={24} color="black" /> */}
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                {/* <Facebook size={24} color="black" /> */}
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                {/* <Apple size={24} color="black" /> */}
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <View style={styles.socialContainer}>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <LogoGoogle size={24} color="black" /> */}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <Facebook size={24} color="black" /> */}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <Apple size={24} color="black" /> */}
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Don't have an account?</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Signup' as never)}
-            >
-              <Text style={styles.signupButton}> Sign up</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+        <AuthFooter
+          promptText="Don't have an account?"
+          buttonLabel="Sign up"
+          onPress={() => navigation.navigate('Signup' as never)}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -381,20 +336,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     opacity: 0.5,
-  },
-  signupContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 30,
-  },
-  signupText: {
-    fontSize: 14,
-    color: 'gray',
-  },
-  signupButton: {
-    fontSize: 14,
-    color: 'black',
-    fontWeight: '500',
-    fontFamily: 'Inter',
   },
 });

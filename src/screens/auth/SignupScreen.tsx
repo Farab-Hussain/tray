@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
 import // CheckCircle,
 // Eye,
@@ -22,10 +23,13 @@ import // CheckCircle,
 'lucide-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import AuthFooter from '../common/AuthFooter';
+import { signupRequest } from '../../services/authService';
+import { useAuthStore } from '../../store/authStore';
 
 const { width, height } = Dimensions.get('window');
 
-const LoginScreen = () => {
+const SignupScreen = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [email, setEmail] = useState('');
@@ -34,9 +38,37 @@ const LoginScreen = () => {
   const isEmailValid = email.includes('@') && email.includes('.');
   const roleOptions = ['Admin', 'Student', 'Consultant'];
   const navigation = useNavigation();
+  const { login, setLoading, isLoading } = useAuthStore();
+
   const handleRoleSelect = (role: string) => {
     setSelectedRole(role);
     setShowDropdown(false);
+  };
+
+  const handleSignup = async () => {
+    if (!selectedRole) {
+      Alert.alert('Please select a role.');
+      return;
+    }
+    try {
+      setLoading(true);
+      const { token, user } = await signupRequest( email, password, selectedRole);
+      login(user, token);
+      console.log('Signed up and logged in:', user);
+
+      // Navigate based on role
+      if (user.role === 'student') {
+        navigation.navigate('Quiz' as never);
+      } else if (user.role === 'consultant') {
+        navigation.navigate('Login' as never); // or Consultant screen
+      } else if (user.role === 'admin') {
+        navigation.navigate('Login' as never); // or AdminDashboard
+      }
+    } catch (error: any) {
+      Alert.alert(error.message || 'Signup failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,150 +76,153 @@ const LoginScreen = () => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>Sign up</Text>
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.contentContainer}>
+            <Text style={styles.title}>Sign up</Text>
 
-          <View style={styles.formContainer}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                style={styles.inputField}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              {isEmailValid && (
-                <Ionicons
-                  name="checkmark-circle"
-                  size={22}
-                  color="green"
-                  style={styles.icon}
-                />
-              )}
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
+            <View style={styles.formContainer}>
+            
+              <Text style={styles.label}>Email</Text>
               <View style={styles.inputWrapper}>
                 <TextInput
                   style={styles.inputField}
-                  placeholder="Password"
-                  secureTextEntry={!showPassword}
-                  value={password}
-                  onChangeText={setPassword}
+                  placeholder="Email"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                >
+                {isEmailValid && (
                   <Ionicons
-                    name={showPassword ? 'eye' : 'eye-off'}
+                    name="checkmark-circle"
                     size={22}
-                    color="gray"
+                    color="green"
                     style={styles.icon}
                   />
-                </TouchableOpacity>
+                )}
               </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    style={styles.inputField}
+                    placeholder="Password"
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    accessibilityRole="button"
+                  >
+                    <Ionicons
+                      name={showPassword ? 'eye' : 'eye-off'}
+                      size={22}
+                      color="gray"
+                      style={styles.icon}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Dropdown */}
+              <Text style={styles.label}>Role</Text>
+              <TouchableOpacity
+                style={styles.inputWrapper}
+                onPress={() => setShowDropdown(true)}
+                activeOpacity={0.8}
+                accessibilityRole="button"
+              >
+                <Text
+                  style={
+                    selectedRole
+                      ? styles.dropdownButtonText
+                      : styles.dropdownPlaceholder
+                  }
+                >
+                  {selectedRole || 'Select Role'}
+                </Text>
+                <Ionicons
+                  name="chevron-down"
+                  size={22}
+                  color="gray"
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+
+              {/* Dropdown Modal */}
+              <Modal
+                visible={showDropdown}
+                transparent={true}
+                animationType="fade"
+                onRequestClose={() => setShowDropdown(false)}
+              >
+                <TouchableOpacity
+                  style={styles.modalOverlay}
+                  onPress={() => setShowDropdown(false)}
+                  accessibilityRole="button"
+                >
+                  <View style={styles.dropdownContainer}>
+                    <FlatList
+                      data={roleOptions}
+                      keyExtractor={item => item}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity
+                          style={styles.dropdownItem}
+                          onPress={() => handleRoleSelect(item)}
+                          activeOpacity={0.7}
+                          accessibilityRole="button"
+                        >
+                          <Text style={styles.dropdownItemText}>{item}</Text>
+                        </TouchableOpacity>
+                      )}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </Modal>
+
+              <TouchableOpacity style={styles.button} accessibilityRole="button" onPress={handleSignup} disabled={isLoading}>
+                <Text style={styles.buttonText}>{isLoading ? 'Signing up...' : 'Sign up'}</Text>
+              </TouchableOpacity>
             </View>
 
-            {/* Dropdown */}
-            <Text style={styles.label}>Role</Text>
-            <TouchableOpacity
-              style={styles.inputWrapper}
-              onPress={() => setShowDropdown(true)}
-              activeOpacity={0.8}
-            >
-              <Text
-                style={
-                  selectedRole
-                    ? styles.dropdownButtonText
-                    : styles.dropdownPlaceholder
-                }
-              >
-                {selectedRole || 'Select Role'}
-              </Text>
-              <Ionicons
-                name="chevron-down"
-                size={22}
-                color="gray"
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-
-            {/* Dropdown Modal */}
-            <Modal
-              visible={showDropdown}
-              transparent={true}
-              animationType="fade"
-              onRequestClose={() => setShowDropdown(false)}
-            >
-              <TouchableOpacity
-                style={styles.modalOverlay}
-                onPress={() => setShowDropdown(false)}
-              >
-                <View style={styles.dropdownContainer}>
-                  <FlatList
-                    data={roleOptions}
-                    keyExtractor={item => item}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        style={styles.dropdownItem}
-                        onPress={() => handleRoleSelect(item)}
-                        activeOpacity={0.7}
-                      >
-                        <Text style={styles.dropdownItemText}>{item}</Text>
-                      </TouchableOpacity>
-                    )}
-                  />
-                </View>
+            <View style={styles.dividerContainer}>
+              <View style={styles.line} />
+              <TouchableOpacity style={styles.dividerTextContainer} accessibilityRole="button">
+                <Text style={styles.dividerText}>or register with</Text>
               </TouchableOpacity>
-            </Modal>
+              <View style={styles.line} />
+            </View>
 
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Sign up</Text>
-            </TouchableOpacity>
+            <View style={styles.socialContainer}>
+              <TouchableOpacity style={styles.socialButton} accessibilityRole="button">
+                {/* <LogoGoogle size={24} color="black" /> */}
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton} accessibilityRole="button">
+                {/* <Facebook size={24} color="black" /> */}
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton} accessibilityRole="button">
+                {/* <Apple size={24} color="black" /> */}
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <View style={styles.dividerContainer}>
-            <View style={styles.line} />
-            <TouchableOpacity style={styles.dividerTextContainer}>
-              <Text style={styles.dividerText}>or register with</Text>
-            </TouchableOpacity>
-            <View style={styles.line} />
-          </View>
-
-          <View style={styles.socialContainer}>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <LogoGoogle size={24} color="black" /> */}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <Facebook size={24} color="black" /> */}
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
-              {/* <Apple size={24} color="black" /> */}
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Already have an account?</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Login' as never)}
-            >
-              <Text style={styles.signupButton}>Log in</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+        <AuthFooter
+          promptText="Already have an account?"
+          buttonLabel="Log in"
+          onPress={() => navigation.navigate('Login' as never)}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };
 
-export default LoginScreen;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
   container: {
