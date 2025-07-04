@@ -1,11 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
-import AuthNavigator from './src/Navigation/AuthNavigator';
-import StudentNavigation from './src/Navigation/StudentNavigation';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
 import { useAuthStore } from './src/store/authStore';
-import ConsultantScreen from './src/screens/Consultant/demo';
-import AdminDashboard from './src/screens/admin/demo';
+import MainNavigator from './src/Navigation/MainNavigator';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { navigationRef } from './src/Navigation/RootNavigation';
 
 enableScreens();
 
@@ -13,26 +12,22 @@ const App = () => {
   // Use Zustand selector pattern to ensure re-render on user change
   const user = useAuthStore(state => state.user);
 
-  let content;
-  if (!user) {
-    content = <AuthNavigator />;
-  } else if (user.role === 'student') {
-    content = <StudentNavigation />;
-  } else if (user.role === 'consultant') {
-    content = <ConsultantScreen />;
-  } else if (user.role === 'admin') {
-    content = <AdminDashboard />;
-  } else {
-    content = <AuthNavigator />;
-  }
-
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        {content}
-      </NavigationContainer>
+      <SafeAreaView style={styles.safeArea}>
+        <NavigationContainer ref={navigationRef}>
+          <MainNavigator user={user} />
+        </NavigationContainer>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
 
 export default App;

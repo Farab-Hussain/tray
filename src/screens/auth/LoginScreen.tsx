@@ -11,7 +11,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import AuthFooter from '../common/AuthFooter';
 import { useAuthStore } from '../../store/authStore';
 import { loginRequest } from '../../services/authService';
@@ -30,18 +30,26 @@ const LoginScreen = () => {
       const { token, user } = await loginRequest(email, password);
       login(user, token);
 
-      switch (user.role) {
+      switch (user.role.toLowerCase()) {
         case 'student':
-          navigation.navigate('DemoPage' as never);
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'StudentProfile' }],
+            })
+          );
           break;
         case 'consultant':
-          navigation.navigate('Consultant' as never);
-          break;
-        case 'admin':
-          navigation.navigate('AdminDashboard' as never);
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'ConsultantScreen' }],
+            })
+          );
           break;
         default:
-          Alert.alert('Unknown user role');
+          Alert.alert('Access Denied', 'Only students and consultants can use this app.');
+          break;
       }
     } catch (error) {
       Alert.alert('Login Failed', 'Invalid email or password.');

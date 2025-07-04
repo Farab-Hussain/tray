@@ -1,0 +1,9 @@
+import Svg, { Path } from 'react-native-svg';
+
+const HeartIcon = (props) => (
+  <Svg width={props.width ?? 24} height={props.height ?? 24} viewBox="0 0 15 14" fill="none">
+    <Path d="M4.375 0.87503C3.41531 0.87503 2.451 1.1875 1.71875 1.9375C0.25431 3.4375 0.294497 5.75 1.71875 7.25L7.5 13.375L13.2812 7.25C14.7056 5.75 14.7456 3.4375 13.2812 1.9375C11.8169 0.5 9.43312 0.5 7.96875 1.9375L7.5 2.43753L7.03125 1.9375C6.29875 1.1875 5.33468 0.87503 4.375 0.87503Z" fill="#C0392B"/>
+  </Svg>
+);
+
+export default HeartIcon;

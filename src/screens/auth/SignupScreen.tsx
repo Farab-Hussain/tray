@@ -36,7 +36,7 @@ const SignupScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState('');
   const isEmailValid = email.includes('@') && email.includes('.');
-  const roleOptions = ['Admin', 'Student', 'Consultant'];
+  const roleOptions = ['Student', 'Consultant'];
   const navigation = useNavigation();
   const { login, setLoading, isLoading } = useAuthStore();
 
@@ -57,12 +57,10 @@ const SignupScreen = () => {
       console.log('Signed up and logged in:', user);
 
       // Navigate based on role
-      if (user.role === 'student') {
-        navigation.navigate('Quiz' as never);
-      } else if (user.role === 'consultant') {
-        navigation.navigate('Login' as never); // or Consultant screen
-      } else if (user.role === 'admin') {
-        navigation.navigate('Login' as never); // or AdminDashboard
+      if (user.role.toLowerCase() === 'student') {
+        (navigation as any).navigate('Quizes', { fromSignup: true });
+      } else if (user.role.toLowerCase() === 'consultant') {
+        navigation.navigate('ConsultantScreen' as never);
       }
     } catch (error: any) {
       Alert.alert(error.message || 'Signup failed');
