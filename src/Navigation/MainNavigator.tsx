@@ -1,76 +1,88 @@
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { User, Book, MessageCircle, Calendar, BarChart, Users, Bell, CircleUserRound, MailOpen } from 'lucide-react-native';
+
 import LoginScreen from '../screens/auth/LoginScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
 import ForgetPasswordScreen from '../screens/auth/ForgetPasswordScreen';
 import OTPScreen from '../screens/auth/OTPScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPassword';
+
 import Quizes from '../screens/students/Quizes';
 import StudentProfile from '../screens/students/StudentProfile';
 import CourseList from '../screens/students/CourseList';
 import Attendance from '../screens/students/Attendance';
 import Results from '../screens/students/Results';
+import SelectSlot from '../screens/students/SelectSlot';
+
 import ConsultantProfile from '../screens/Consultant/ConsultantProfile';
 import ManageStudents from '../screens/Consultant/ManageStudents';
 import Schedule from '../screens/Consultant/Schedule';
 import Reports from '../screens/Consultant/Reports';
+
 import SplashScreen from '../screens/common/SplashScreen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProfileHeader from '../screens/common/ProfileHeader';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// 🧑 Student Tabs
 const StudentTabNavigator = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
-        let iconName = 'ellipse';
-        if (route.name === 'StudentProfile') iconName = 'person';
-        else if (route.name === 'Quizes') iconName = 'book';
-        else if (route.name === 'CourseList') iconName = 'list';
-        else if (route.name === 'Attendance') iconName = 'calendar';
-        else if (route.name === 'Results') iconName = 'stats-chart';
-        return <Ionicons name={iconName} size={size} color={color} />;
+      tabBarIcon: ({ size, focused }) => {
+        const iconColor = focused ? '#fff' : '#B5BEC6';
+        if (route.name === 'StudentProfile') return <MailOpen size={size} color={iconColor} />;
+        if (route.name === 'Quizes') return <Book size={size} color={iconColor} />;
+        if (route.name === 'CourseList') return <MessageCircle size={size} color={iconColor} />;
+        if (route.name === 'Attendance') return <Bell size={size} color={iconColor} />;
+        if (route.name === 'Results') return <CircleUserRound size={size} color={iconColor} />;
+        return <User size={size} color={iconColor} />;
       },
-      tabBarActiveTintColor: '#000',
-      tabBarInactiveTintColor: '#888',
+      tabBarActiveTintColor: '#fff',
+      tabBarInactiveTintColor: '#B5BEC6',
       tabBarStyle: { backgroundColor: '#ADEBB3', height: 60, paddingBottom: 5 },
-      tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold' },
+      tabBarLabelStyle: { fontSize: 12, fontWeight: '400' },
     })}
   >
     <Tab.Screen
       name="StudentProfile"
       component={StudentProfile}
       options={{
-        title: 'Profile',
+        title: 'Menu',
         headerShown: true,
-        header: () => <ProfileHeader name="John Doe" image="https://randomuser.me/api/portraits/men/1.jpg" />,
+        header: () => (
+          <ProfileHeader
+            name="John Doe"
+            image="https://randomuser.me/api/portraits/men/1.jpg"
+          />
+        ),
       }}
     />
-    <Tab.Screen name="Quizes" component={Quizes} options={{ title: 'Quizzes', headerShown: false }} />
-    <Tab.Screen name="CourseList" component={CourseList} options={{ title: 'Courses', headerShown: false }} />
-    <Tab.Screen name="Attendance" component={Attendance} options={{ title: 'Attendance', headerShown: false }} />
-    <Tab.Screen name="Results" component={Results} options={{ title: 'Results', headerShown: false }} />
+    <Tab.Screen name="Quizes" component={Quizes} options={{ title: 'Courses', headerShown: false }} />
+    <Tab.Screen name="CourseList" component={CourseList} options={{ title: 'Messages', headerShown: false }} />
+    <Tab.Screen name="Attendance" component={Attendance} options={{ title: 'Notifications', headerShown: false }} />
+    <Tab.Screen name="Results" component={Results} options={{ title: 'Account', headerShown: false }} />
   </Tab.Navigator>
 );
 
+// 👩 Consultant Tabs
 const ConsultantTabNavigator = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
-        let iconName = 'ellipse';
-        if (route.name === 'ConsultantProfile') iconName = 'person';
-        else if (route.name === 'ManageStudents') iconName = 'people';
-        else if (route.name === 'Schedule') iconName = 'calendar';
-        else if (route.name === 'Reports') iconName = 'stats-chart';
-        return <Ionicons name={iconName} size={size} color={color} />;
+      tabBarIcon: ({ size, focused }) => {
+        const iconColor = focused ? '#fff' : '#B5BEC6';
+        if (route.name === 'ConsultantProfile') return <User size={size} color={iconColor} />;
+        if (route.name === 'ManageStudents') return <Users size={size} color={iconColor} />;
+        if (route.name === 'Schedule') return <Calendar size={size} color={iconColor} />;
+        if (route.name === 'Reports') return <BarChart size={size} color={iconColor} />;
+        return <User size={size} color={iconColor} />;
       },
-      tabBarActiveTintColor: '#000',
-      tabBarInactiveTintColor: '#888',
+      tabBarActiveTintColor: '#fff',
+      tabBarInactiveTintColor: '#B5BEC6',
       tabBarStyle: { backgroundColor: '#ADEBB3', height: 60, paddingBottom: 5 },
-      tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold' },
+      tabBarLabelStyle: { fontSize: 12, fontWeight: '400' },
     })}
   >
     <Tab.Screen
@@ -79,7 +91,12 @@ const ConsultantTabNavigator = () => (
       options={{
         title: 'Profile',
         headerShown: true,
-        header: () => <ProfileHeader name="Jane Smith" image="https://randomuser.me/api/portraits/women/1.jpg" />,
+        header: () => (
+          <ProfileHeader
+            name="Jane Smith"
+            image="https://randomuser.me/api/portraits/women/1.jpg"
+          />
+        ),
       }}
     />
     <Tab.Screen name="ManageStudents" component={ManageStudents} options={{ title: 'Students', headerShown: false }} />
@@ -88,54 +105,89 @@ const ConsultantTabNavigator = () => (
   </Tab.Navigator>
 );
 
+// 🌐 Main Navigator
 const MainNavigator = ({ user }: { user: any }) => {
   const [showSplash, setShowSplash] = useState(true);
-  // const { logout } = useAuthStore();
+
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Debug logs
-  console.log('MainNavigator render:', { user, showSplash });
+  if (showSplash) return <SplashScreen />;
 
-  if (showSplash) {
-    return <SplashScreen />;
-  }
-
-  // If no user, show auth flow
+  // Auth Flow
   if (!user) {
-    console.log('Rendering Auth Flow');
     return (
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+      <Stack.Navigator
+        screenOptions={{
+          headerTintColor: '#000',
+          headerTitleStyle: { fontWeight: 'bold', fontSize: 20 },
+          headerTitleAlign: 'center',
+          headerStyle: { backgroundColor: 'transparent' },
+        }}
+      >
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="ForgotPassword" component={ForgetPasswordScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="OTP" component={OTPScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="OTP" component={OTPScreen}options={{ headerShown: false }} />
+        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     );
   }
 
-  // If student, show student screens
-  if (user.role && user.role.toLowerCase() === 'student') {
-    console.log('Rendering Student Flow');
-    return <StudentTabNavigator />;
+  // Student Flow
+  if (user.role?.toLowerCase() === 'student') {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerTintColor: '#000',
+          headerTitleStyle: { fontWeight: 'bold', fontSize: 20 },
+          headerTitleAlign: 'center',
+          headerStyle: { backgroundColor: 'transparent' },
+        }}
+      >
+        <Stack.Screen name="StudentTabs" component={StudentTabNavigator} options={{ headerShown: false }} />
+        <Stack.Screen
+          name="SelectSlot"
+          component={SelectSlot}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack.Navigator>
+    );
   }
 
-  // If consultant, show consultant screens
-  if (user.role && user.role.toLowerCase() === 'consultant') {
-    console.log('Rendering Consultant Flow');
-    return <ConsultantTabNavigator />;
+  // Consultant Flow
+  if (user.role?.toLowerCase() === 'consultant') {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerTintColor: '#000',
+          headerTitleStyle: { fontWeight: 'bold', fontSize: 20 },
+          headerTitleAlign: 'center',
+          headerStyle: { backgroundColor: 'transparent' },
+        }}
+      >
+        <Stack.Screen name="ConsultantTabs" component={ConsultantTabNavigator} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    );
   }
 
-  // Default fallback
-  console.log('Rendering Default Fallback');
+  // Fallback
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: '#000',
+        headerTitleStyle: { fontWeight: 'bold', fontSize: 20 },
+        headerTitleAlign: 'center',
+        headerStyle: { backgroundColor: 'transparent' },
+      }}
+    >
+      <Stack.Screen name="Login" component={LoginScreen} />
     </Stack.Navigator>
   );
 };
 
-export default MainNavigator; 
+export default MainNavigator;

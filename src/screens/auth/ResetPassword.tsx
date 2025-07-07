@@ -97,9 +97,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
   },
-  backButton: {
-    padding: SPACING / 4,
-    marginTop: SPACING / 2,
+  backButton: {    position: 'absolute',
+    top: 10,
+    left: 22,
+    zIndex: 1,
+    borderWidth:1,
+    padding:5,
+    borderRadius:10,
+
   },
   contentContainer: {
     flex: 1,

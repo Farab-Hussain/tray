@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { MessageCircle, Phone, Video } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2; // 16px padding on both sides + 16px spacing between
@@ -25,6 +26,13 @@ const MyPackageCard: React.FC<{ data: MyPackageCardProps['data'] }> = ({
   data,
 }) => {
   const isExpired = data.status === 'expired';
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    if (isExpired) {
+      navigation.navigate('SelectSlot' as never);
+    }
+  };
 
   return (
     <View style={styles.card}>
@@ -40,7 +48,7 @@ const MyPackageCard: React.FC<{ data: MyPackageCardProps['data'] }> = ({
       />
       <Text style={styles.title}>{data.title}</Text>
       <Text style={styles.subtitle}>{data.title}</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
         {isExpired ? (
           <Text style={styles.buttonText}>Book again</Text>
         ) : (
@@ -52,9 +60,15 @@ const MyPackageCard: React.FC<{ data: MyPackageCardProps['data'] }> = ({
       {/* 3 icons in a row */}
       {isExpired ? null : (
         <View style={styles.iconRow}>
-          <MessageCircle size={24} />
-          <Phone size={24} />
-          <Video size={24} />
+          <View style={styles.iconWrapper}>
+            <MessageCircle size={14} color="#187D22" />
+          </View>
+          <View style={styles.iconWrapper}>
+            <Phone size={14} color="#187D22" />
+          </View>
+          <View style={styles.iconWrapper}>
+            <Video size={14} color="#187D22" />
+          </View>
         </View>
       )}
     </View>
@@ -70,7 +84,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     elevation: 3,
     alignItems: 'center',
-    margin: 8,
+    // margin: 8,
     // iOS shadow
     shadowColor: '#000',
     shadowOffset: {
@@ -155,7 +169,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
-    gap: 12,
+    gap: 5,
+  },
+  iconWrapper: {
+    borderWidth: 1,
+    borderColor: '#187D22',
+    borderRadius: 20,
+    padding: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   subtitle: {
     fontSize: 10,

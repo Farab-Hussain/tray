@@ -71,3 +71,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+export const hydrateAuth = async (set: any) => {
+  const token = await AsyncStorage.getItem('token');
+  const user = await AsyncStorage.getItem('user');
+  if (token && user) {
+    set({ token, user: JSON.parse(user) });
+  }
+};
