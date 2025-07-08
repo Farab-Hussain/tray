@@ -1648,10 +1648,13 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
+<<<<<<< HEAD
   - react-native-config (1.5.5):
     - react-native-config/App (= 1.5.5)
   - react-native-config/App (1.5.5):
     - React-Core
+=======
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
   - react-native-safe-area-context (5.5.1):
     - boost
     - DoubleConversion
@@ -2683,7 +2686,10 @@ SPEC CHECKSUMS:
   React-logger: dce52a571ba0e0149c3f0fcc6866cbc0c8552c5e
   React-Mapbuffer: f5754c33877eaf36e4c76c613b35615a181c85c5
   React-microtasksnativemodule: 23df6374a3ac422d8c2927839bcaeed61fee3dad
+<<<<<<< HEAD
   react-native-config: 644074ab88db883fcfaa584f03520ec29589d7df
+=======
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
   react-native-safe-area-context: d3738f0c3b1fcefaed874a45891b0d44306c47c1
   React-NativeModulesApple: e16d5c133019987285f001fbf1461a861e40426f
   React-oscompat: 7c0a341cc31e350da71ddf2e46de0a845d1d1626

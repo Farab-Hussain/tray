@@ -17,6 +17,7 @@ import AuthFooter from '../common/AuthFooter';
 import axios from 'axios';
 
 
+
 const { width, height } = Dimensions.get('window');
 const SPACING = Math.max(16, width * 0.04); // Responsive base spacing
 

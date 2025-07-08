@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import ScreenHeader from '../common/ScreenHeader';
+<<<<<<< HEAD
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -17,6 +18,8 @@ type StudentStackParamList = {
   SelectSlot: undefined;
   Cart: undefined;
 };
+=======
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
 
 const timeSlots = [
   '09:00 AM',
@@ -31,7 +34,10 @@ const timeSlots = [
 const SelectSlot = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState('');
+<<<<<<< HEAD
   const navigation = useNavigation<NativeStackNavigationProp<StudentStackParamList>>();
+=======
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
 
   const onDateSelect = (day: any) => {
     setSelectedDate(day.dateString);
@@ -98,7 +104,10 @@ const SelectSlot = () => {
         onPress={() => {
           // handle booking logic here
           console.log('Booked:', selectedDate, selectedSlot);
+<<<<<<< HEAD
           navigation.navigate('Cart');
+=======
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
         }}
       >
         <Text style={styles.bookBtnText}>Book Now</Text>

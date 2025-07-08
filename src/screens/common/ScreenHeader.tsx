@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 interface Props {
   title: string;
+<<<<<<< HEAD
   style?: any;
 }
 
@@ -13,6 +14,15 @@ const ScreenHeader: React.FC<Props> = ({ title, style }) => {
 
   return (
     <View style={[styles.container, style]}>
+=======
+}
+
+const ScreenHeader: React.FC<Props> = ({ title }) => {
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.container}>
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.backButton}

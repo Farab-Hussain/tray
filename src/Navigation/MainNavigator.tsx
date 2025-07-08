@@ -9,9 +9,14 @@ import ForgetPasswordScreen from '../screens/auth/ForgetPasswordScreen';
 import OTPScreen from '../screens/auth/OTPScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPassword';
 
+<<<<<<< HEAD
+=======
+import Quizes from '../screens/students/Quizes';
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
 import StudentProfile from '../screens/students/StudentProfile';
 import Profile from '../screens/students/profile';
 import CourseList from '../screens/students/CourseList';
+<<<<<<< HEAD
 import SelectSlot from '../screens/students/SelectSlot';
 import Cart from '../screens/students/Cart';
 import ChatScreen from '../screens/students/ChatScreen';
@@ -19,6 +24,11 @@ import VoiceCallScreen from '../screens/common/voiceCalling';
 import VideoCallScreen from '../screens/common/videoCalling';
 import NotificationScreen from '../screens/common/NotificationScreen';
 import Conversations from '../screens/students/Conversations';
+=======
+import Attendance from '../screens/students/Attendance';
+import Results from '../screens/students/Results';
+import SelectSlot from '../screens/students/SelectSlot';
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
 
 import ConsultantProfile from '../screens/Consultant/ConsultantProfile';
 import ManageStudents from '../screens/Consultant/ManageStudents';
@@ -41,6 +51,7 @@ type StudentStackParamList = {
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+<<<<<<< HEAD
 // Move this outside the component
 const StudentProfileHeader = ({ user }: { user: any }) => {
   const navigation = useNavigation<NativeStackNavigationProp<StudentStackParamList>>();
@@ -134,6 +145,85 @@ const ConsultantTabNavigator = () => {
     </Tab.Navigator>
   );
 };
+=======
+// 🧑 Student Tabs
+const StudentTabNavigator = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ size, focused }) => {
+        const iconColor = focused ? '#fff' : '#B5BEC6';
+        if (route.name === 'StudentProfile') return <MailOpen size={size} color={iconColor} />;
+        if (route.name === 'Quizes') return <Book size={size} color={iconColor} />;
+        if (route.name === 'CourseList') return <MessageCircle size={size} color={iconColor} />;
+        if (route.name === 'Attendance') return <Bell size={size} color={iconColor} />;
+        if (route.name === 'Results') return <CircleUserRound size={size} color={iconColor} />;
+        return <User size={size} color={iconColor} />;
+      },
+      tabBarActiveTintColor: '#fff',
+      tabBarInactiveTintColor: '#B5BEC6',
+      tabBarStyle: { backgroundColor: '#ADEBB3', height: 60, paddingBottom: 5 },
+      tabBarLabelStyle: { fontSize: 12, fontWeight: '400' },
+    })}
+  >
+    <Tab.Screen
+      name="StudentProfile"
+      component={StudentProfile}
+      options={{
+        title: 'Menu',
+        headerShown: true,
+        header: () => (
+          <ProfileHeader
+            name="John Doe"
+            image="https://randomuser.me/api/portraits/men/1.jpg"
+          />
+        ),
+      }}
+    />
+    <Tab.Screen name="Quizes" component={Quizes} options={{ title: 'Courses', headerShown: false }} />
+    <Tab.Screen name="CourseList" component={CourseList} options={{ title: 'Messages', headerShown: false }} />
+    <Tab.Screen name="Attendance" component={Attendance} options={{ title: 'Notifications', headerShown: false }} />
+    <Tab.Screen name="Results" component={Results} options={{ title: 'Account', headerShown: false }} />
+  </Tab.Navigator>
+);
+
+// 👩 Consultant Tabs
+const ConsultantTabNavigator = () => (
+  <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ size, focused }) => {
+        const iconColor = focused ? '#fff' : '#B5BEC6';
+        if (route.name === 'ConsultantProfile') return <User size={size} color={iconColor} />;
+        if (route.name === 'ManageStudents') return <Users size={size} color={iconColor} />;
+        if (route.name === 'Schedule') return <Calendar size={size} color={iconColor} />;
+        if (route.name === 'Reports') return <BarChart size={size} color={iconColor} />;
+        return <User size={size} color={iconColor} />;
+      },
+      tabBarActiveTintColor: '#fff',
+      tabBarInactiveTintColor: '#B5BEC6',
+      tabBarStyle: { backgroundColor: '#ADEBB3', height: 60, paddingBottom: 5 },
+      tabBarLabelStyle: { fontSize: 12, fontWeight: '400' },
+    })}
+  >
+    <Tab.Screen
+      name="ConsultantProfile"
+      component={ConsultantProfile}
+      options={{
+        title: 'Profile',
+        headerShown: true,
+        header: () => (
+          <ProfileHeader
+            name="Jane Smith"
+            image="https://randomuser.me/api/portraits/women/1.jpg"
+          />
+        ),
+      }}
+    />
+    <Tab.Screen name="ManageStudents" component={ManageStudents} options={{ title: 'Students', headerShown: false }} />
+    <Tab.Screen name="Schedule" component={Schedule} options={{ title: 'Schedule', headerShown: false }} />
+    <Tab.Screen name="Reports" component={Reports} options={{ title: 'Reports', headerShown: false }} />
+  </Tab.Navigator>
+);
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
 
 // 🌐 Main Navigator
 const MainNavigator = ({ user }: { user: any }) => {
@@ -185,6 +275,7 @@ const MainNavigator = ({ user }: { user: any }) => {
             headerShown: false,
           }}
         />
+<<<<<<< HEAD
         <Stack.Screen
           name="Cart"
           component={Cart}
@@ -219,6 +310,8 @@ const MainNavigator = ({ user }: { user: any }) => {
           component={NotificationScreen}
           options={{ headerShown: false }}
         />
+=======
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
       </Stack.Navigator>
     );
   }
@@ -253,4 +346,9 @@ const MainNavigator = ({ user }: { user: any }) => {
     </Stack.Navigator>
   );
 };
+<<<<<<< HEAD
 export default MainNavigator;
+=======
+
+export default MainNavigator;
+>>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
