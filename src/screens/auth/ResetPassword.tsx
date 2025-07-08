@@ -9,18 +9,43 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import axios from 'axios';
 import { ChevronLeft } from 'lucide-react-native';
 
 const { width, height } = Dimensions.get('window');
 const SPACING = Math.max(16, width * 0.04); // Responsive base spacing
 
 const ResetPasswordScreen = () => {
-  const [email, setEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
+  const route = useRoute();
+  const { email, otp } = (route as any).params || {};
 
-  const handleGoBack = () => navigation.goBack();
+  const handleResetPassword = async () => {
+    if (!newPassword || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in both password fields');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+    try {
+      await axios.post('http://localhost:5050/api/auth/resetPassword', {
+        email,
+        otp,
+        newPassword,
+      });
+      Alert.alert('Success', 'Password has been reset');
+      navigation.navigate('Login' as never);
+    } catch (error: any) {
+      Alert.alert('Error', error.response?.data?.message || 'Password reset failed');
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -34,7 +59,7 @@ const ResetPasswordScreen = () => {
         <View style={styles.contentContainer}>
           {/* Back Button */}
           <View style={styles.backButton}>
-            <TouchableOpacity onPress={handleGoBack} accessibilityLabel="Go back" accessibilityRole="button">
+            <TouchableOpacity onPress={() => navigation.goBack()} accessibilityLabel="Go back" accessibilityRole="button">
               <ChevronLeft size={24} color="black" strokeWidth={2} />
             </TouchableOpacity>
           </View>
@@ -51,11 +76,10 @@ const ResetPasswordScreen = () => {
             <TextInput
               style={styles.inputField}
               placeholder="must be 8 characters"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              accessibilityLabel="Email address"
+              value={newPassword}
+              onChangeText={setNewPassword}
+              secureTextEntry
+              accessibilityLabel="New password"
             />
           </View>
           <Text style={styles.label}>Confirm new password</Text>
@@ -63,16 +87,15 @@ const ResetPasswordScreen = () => {
             <TextInput
               style={styles.inputField}
               placeholder="repeat password"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              accessibilityLabel="Email address"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              accessibilityLabel="Confirm new password"
             />
           </View>
 
-          {/* Send OTP Button */}
-          <TouchableOpacity style={styles.button} accessibilityRole="button" onPress={() => navigation.navigate('Quizes' as never)}>
+          {/* Reset Password Button */}
+          <TouchableOpacity style={styles.button} accessibilityRole="button" onPress={handleResetPassword}>
             <Text style={styles.buttonText}>Reset password</Text>
           </TouchableOpacity>
         </View>
@@ -97,9 +120,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
   },
-  backButton: {
-    padding: SPACING / 4,
-    marginTop: SPACING / 2,
+  backButton: {    position: 'absolute',
+    top: 10,
+    left: 22,
+    zIndex: 1,
+    borderWidth:1,
+    padding:5,
+    borderRadius:10,
+
   },
   contentContainer: {
     flex: 1,

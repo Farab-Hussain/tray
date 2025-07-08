@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { LogOut } from 'lucide-react-native';
 import { useAuthStore } from '../../store/authStore';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -20,7 +20,7 @@ const Quizes = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={logout} accessibilityRole="button">
-          <Ionicons name="log-out-outline" size={28} color="black" />
+          <LogOut size={28} color="black" />
         </TouchableOpacity>
         <Text style={styles.title}>Quizes</Text>
       </View>

@@ -27,9 +27,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoading: (state) => set({ isLoading: state }),
 
   login: async (user, token) => {
-    await AsyncStorage.setItem('user', JSON.stringify(user));
+    const username = user.email.split('@')[0];
+    const userWithUsername = { ...user, username };
+    await AsyncStorage.setItem('user', JSON.stringify(userWithUsername));
     await AsyncStorage.setItem('token', token);
-    set({ user, token });
+    set({ user: userWithUsername, token });
 
     // Redirect based on role
     if (user.role === 'student') {
@@ -52,7 +54,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       const token = await AsyncStorage.getItem('token');
 
       if (userData && token) {
-        const user: User = JSON.parse(userData);
+        const user = JSON.parse(userData);
+        if (!user.username && user.email) {
+          user.username = user.email.split('@')[0];
+        }
         set({ user, token });
 
         // Navigate based on role
@@ -71,3 +76,11 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+export const hydrateAuth = async (set: any) => {
+  const token = await AsyncStorage.getItem('token');
+  const user = await AsyncStorage.getItem('user');
+  if (token && user) {
+    set({ token, user: JSON.parse(user) });
+  }
+};

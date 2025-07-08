@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity } from 'react-native'
 
 const { width: SCREEN_WIDTH,  } = Dimensions.get('window')
 
@@ -8,9 +8,10 @@ const HEADER_HEIGHT = 100; // or whatever your header height is
 interface ProfileHeaderProps {
   name: string;
   image: string;
+  onProfilePress?: () => void;
 }
 
-const ProfileHeader = ({ name, image }: ProfileHeaderProps) => {
+const ProfileHeader = ({ name, image, onProfilePress }: ProfileHeaderProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -18,7 +19,9 @@ const ProfileHeader = ({ name, image }: ProfileHeaderProps) => {
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.desc}>start your productive day</Text>
         </View>
-        <Image source={{ uri: image }} style={styles.image} />
+        <TouchableOpacity onPress={onProfilePress} disabled={!onProfilePress}>
+          <Image source={{ uri: image }} style={styles.image} />
+        </TouchableOpacity>
       </View>
       <View style={styles.content}>
         {/* Rest of the component content */}

@@ -13,19 +13,15 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import // CheckCircle,
-// Eye,
-// EyeOff,
-// ChevronDown,
-// LogoGoogle,
-// Facebook,
-// Apple
-'lucide-react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { CheckCircle, Eye, EyeOff, ChevronDown } from 'lucide-react-native';
+import 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import AuthFooter from '../common/AuthFooter';
 import { signupRequest } from '../../services/authService';
 import { useAuthStore } from '../../store/authStore';
+// import GoogleIcon from '../../assets/images/svg/google.svg';
+// import FacebookIcon from '../../assets/images/svg/facebook.svg';
+// import AppleIcon from '../../assets/images/svg/apple.svg';
 
 const { width, height } = Dimensions.get('window');
 
@@ -96,12 +92,7 @@ const SignupScreen = () => {
                   autoCapitalize="none"
                 />
                 {isEmailValid && (
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={22}
-                    color="green"
-                    style={styles.icon}
-                  />
+                  <CheckCircle size={22} color="green" style={styles.icon} />
                 )}
               </View>
               <View style={styles.inputContainer}>
@@ -118,12 +109,11 @@ const SignupScreen = () => {
                     onPress={() => setShowPassword(!showPassword)}
                     accessibilityRole="button"
                   >
-                    <Ionicons
-                      name={showPassword ? 'eye' : 'eye-off'}
-                      size={22}
-                      color="gray"
-                      style={styles.icon}
-                    />
+                    {showPassword ? (
+                      <Eye size={22} color="gray" style={styles.icon} />
+                    ) : (
+                      <EyeOff size={22} color="gray" style={styles.icon} />
+                    )}
                   </TouchableOpacity>
                 </View>
               </View>
@@ -145,12 +135,7 @@ const SignupScreen = () => {
                 >
                   {selectedRole || 'Select Role'}
                 </Text>
-                <Ionicons
-                  name="chevron-down"
-                  size={22}
-                  color="gray"
-                  style={styles.icon}
-                />
+                <ChevronDown size={22} color="gray" style={styles.icon} />
               </TouchableOpacity>
 
               {/* Dropdown Modal */}
@@ -199,13 +184,13 @@ const SignupScreen = () => {
 
             <View style={styles.socialContainer}>
               <TouchableOpacity style={styles.socialButton} accessibilityRole="button">
-                {/* <LogoGoogle size={24} color="black" /> */}
+                {/* <GoogleIcon width={24} height={24} /> */}
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialButton} accessibilityRole="button">
-                {/* <Facebook size={24} color="black" /> */}
+                {/* <FacebookIcon width={24} height={24} /> */}
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialButton} accessibilityRole="button">
-                {/* <Apple size={24} color="black" /> */}
+                {/* <AppleIcon width={24} height={24} /> */}
               </TouchableOpacity>
             </View>
           </View>

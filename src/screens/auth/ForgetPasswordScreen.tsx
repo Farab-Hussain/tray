@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   Dimensions,
   KeyboardAvoidingView,
   Platform,
@@ -13,6 +14,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { ChevronLeft } from 'lucide-react-native';
 import AuthFooter from '../common/AuthFooter';
+import axios from 'axios';
+
 
 const { width, height } = Dimensions.get('window');
 const SPACING = Math.max(16, width * 0.04); // Responsive base spacing
@@ -21,15 +24,26 @@ const ForgetPasswordScreen = () => {
   const [email, setEmail] = useState('');
   const navigation = useNavigation();
 
+
   const handleGoBack = () => navigation.goBack();
   const handleSignup = () => navigation.navigate('Signup' as never);
+
+  const handleSendOtp = async () =>{
+    try {
+      await axios.post('http://localhost:5050/api/auth/forgetPassword',{email});
+      Alert.alert('Success', 'OTP has been sent to your email');
+    } catch (error) {
+      console.error(error);
+      console.error('OTP verification failed:', error);
+    }
+  }
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
@@ -64,7 +78,14 @@ const ForgetPasswordScreen = () => {
             </View>
 
             {/* Send OTP Button */}
-            <TouchableOpacity style={styles.button} accessibilityRole="button" onPress={() => navigation.navigate('OTP' as never)}>
+            <TouchableOpacity
+              style={styles.button}
+              accessibilityRole="button"
+              onPress={async () => {
+                await handleSendOtp();
+                (navigation.navigate as any)('OTP', { email });
+              }}
+            >
               <Text style={styles.buttonText}>Send OTP</Text>
             </TouchableOpacity>
           </View>
@@ -88,8 +109,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backButton: {
-    padding: SPACING / 4,
-    marginTop: SPACING / 2,
+    position: 'absolute',
+    top: 10,
+    left: 22,
+    zIndex: 1,
+    borderWidth:1,
+    padding:5,
+    borderRadius:10,
+
   },
   contentContainer: {
     flex: 1,

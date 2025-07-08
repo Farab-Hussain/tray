@@ -9,10 +9,12 @@ import {
   TextInput as RNTextInput,
   TouchableOpacity,
   View,
+  Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { ChevronLeft } from 'lucide-react-native';
 import AuthFooter from '../common/AuthFooter';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 const SPACING = Math.max(16, width * 0.04); // Responsive base spacing
@@ -28,6 +30,8 @@ const OTPScreen = () => {
     useRef<RNTextInput>(null),
   ];
   const navigation = useNavigation();
+  const route = useRoute<RouteProp<{ params: { email: string } }, 'params'>>();
+  const email = route.params.email;
 
   useEffect(() => {
     let interval: any;
@@ -50,12 +54,31 @@ const OTPScreen = () => {
   const handleGoBack = () => navigation.goBack();
   //    const handleSignup = () => navigation.navigate('Signup' as never);
 
+  // TODO: Pass the correct email value to this function, e.g. via props or navigation params
+  const verifyOtp = async () => {
+    const otpCode = otp.join('');
+    if (otpCode.length !== 4) {
+      Alert.alert('Error', 'Please enter the 4-digit OTP');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:5050/api/auth/verifyOtp', { email, otp: otpCode });
+      if (response.status === 200 && response.data.message === "OTP verified successfully") {
+        (navigation.navigate as any)('ResetPassword', { otp: otpCode, email });
+      } else {
+        Alert.alert('Error', response.data.message || 'Incorrect OTP');
+      }
+    } catch (error: any) {
+      Alert.alert('Error', error.response?.data?.message || 'Incorrect OTP');
+    }
+  }
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
@@ -118,7 +141,13 @@ const OTPScreen = () => {
                 </Text>
               )}
             </View>
-            <TouchableOpacity style={styles.button} accessibilityRole="button" onPress={() => navigation.navigate('ResetPassword' as never)}>
+            <TouchableOpacity
+              style={styles.button}
+              accessibilityRole="button"
+              onPress={async () => {
+                await verifyOtp();
+              }}
+            >
               <Text style={styles.buttonText}>Verify</Text>
             </TouchableOpacity>
           </View>
@@ -141,9 +170,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
   },
-  backButton: {
-    padding: SPACING / 4,
-    marginTop: SPACING / 2,
+  backButton: {    position: 'absolute',
+    top: 10,
+    left: 22,
+    zIndex: 1,
+    borderWidth:1,
+    padding:5,
+    borderRadius:10,
+
   },
   contentContainer: {
     flex: 1,
@@ -151,6 +185,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     maxWidth: 400,
     width: '100%',
+    // marginBottom:20,
   },
   title: {
     paddingTop: height * 0.07, // replaces 59 with a responsive value

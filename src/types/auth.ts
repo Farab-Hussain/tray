@@ -5,4 +5,6 @@ export interface User {
   email: string;
   role: string;
   avatarUrl?: string;
+  username?: string;
+  image?: string;
 }

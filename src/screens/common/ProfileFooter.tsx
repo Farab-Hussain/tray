@@ -1,22 +1,22 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Menu, Book, MessageCircle, Bell, User } from 'lucide-react-native';
 
 const icons = [
-  { name: 'menu', label: 'Menu' },
-  { name: 'book', label: 'Courses' },
-  { name: 'chatbubble-ellipses', label: 'Message' },
-  { name: 'notifications', label: 'Notifications' },
-  { name: 'person', label: 'Account' },
+  { name: 'menu', label: 'Menu', Icon: Menu },
+  { name: 'book', label: 'Courses', Icon: Book },
+  { name: 'chatbubble-ellipses', label: 'Message', Icon: MessageCircle },
+  { name: 'notifications', label: 'Notifications', Icon: Bell },
+  { name: 'person', label: 'Account', Icon: User },
 ];
 
 const ProfileFooter = () => {
   return (
     <View style={styles.footer}>
-      {icons.map((icon) => (
-        <View style={styles.iconContainer} key={icon.name}>
-          <Ionicons name={icon.name} size={28} color="#333" />
-          <Text style={styles.label}>{icon.label}</Text>
+      {icons.map(({ name, label, Icon }) => (
+        <View style={styles.iconContainer} key={name}>
+          <Icon size={24} color="#333" />
+          <Text style={styles.label}>{label}</Text>
         </View>
       ))}
     </View>

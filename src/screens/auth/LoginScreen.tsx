@@ -15,12 +15,15 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import AuthFooter from '../common/AuthFooter';
 import { useAuthStore } from '../../store/authStore';
 import { loginRequest } from '../../services/authService';
+// import GoogleIcon from '../../assets/images/svg/google.svg';
+// import FacebookIcon from '../../assets/images/svg/facebook.svg';
+// import AppleIcon from '../../assets/images/svg/apple.svg';
 
 const { width, height } = Dimensions.get('window');
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState('alica@example.com');
+  const [email, setEmail] = useState('@example.com');
   const [password, setPassword] = useState('secure123');
   const { login, setLoading, isLoading } = useAuthStore();
 
@@ -128,13 +131,13 @@ const LoginScreen = () => {
 
             <View style={styles.socialContainer}>
               <TouchableOpacity style={styles.socialButton}>
-                {/* <LogoGoogle size={24} color="black" /> */}
+                {/* <GoogleIcon width={24} height={24} /> */}
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialButton}>
-                {/* <Facebook size={24} color="black" /> */}
+                {/* <FacebookIcon width={24} height={24} /> */}
               </TouchableOpacity>
               <TouchableOpacity style={styles.socialButton}>
-                {/* <Apple size={24} color="black" /> */}
+                {/* <AppleIcon width={24} height={24} /> */}
               </TouchableOpacity>
             </View>
           </View>
