@@ -37,7 +37,7 @@ const chatList = [
   },
 ];
 
-const Conversations = () => {
+const CommonConversations = () => {
   const navigation = useNavigation<any>();
   return (
     <View style={styles.container}>
@@ -67,7 +67,7 @@ const Conversations = () => {
           <TouchableOpacity
             style={styles.chatRow}
             onPress={() =>
-              navigation.navigate('ChatScreen', {
+              navigation.navigate('CommonChatScreen', {
                 name: item.name,
                 image: item.image,
                 role: 'Senior Consultant', // Or dynamic role
@@ -98,7 +98,7 @@ const Conversations = () => {
   );
 };
 
-export default Conversations;
+export default CommonConversations;
 const styles = StyleSheet.create({
     container: {
       flex: 1,

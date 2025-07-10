@@ -6,9 +6,8 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import ScreenHeader from './ScreenHeader';
-// If the SearchBar component does not exist at this path, update the import path or create the component as needed.
 import SearchBar from '../../components/SearchBar';
+import ScreenHeader from './ScreenHeader';
 
 const notifications = [
   {
@@ -20,14 +19,14 @@ const notifications = [
   },
   {
     id: '2',
-    name: 'Dr. Bilal Ahmad',
+    name: 'Dr. Bella',
     message: 'Appointment Cancelled',
     time: '1 hour ago',
     image: 'https://randomuser.me/api/portraits/men/47.jpg',
   },
   {
     id: '3',
-    name: 'Dr. Ayesha Siddiqui',
+    name: 'Dr. Ayesha Siliqua',
     message: 'Appointment Rescheduled',
     time: 'Yesterday',
     image: 'https://randomuser.me/api/portraits/women/56.jpg',

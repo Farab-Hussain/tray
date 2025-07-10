@@ -36,7 +36,7 @@ const CourseList = () => {
             <Text style={styles.bulletText}>Focus on Reframing Your Narrative</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('SelectSlot' as never)}>
+        <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('CommonSelectSlot' as never)}>
           <Text style={styles.btnText}>Book Now</Text>
         </TouchableOpacity>
       </View>

@@ -30,7 +30,7 @@ const MyPackageCard: React.FC<{ data: MyPackageCardProps['data'] }> = ({
 
   const handlePress = () => {
     if (isExpired) {
-      navigation.navigate('SelectSlot' as never);
+      navigation.navigate('CommonSelectSlot' as never);
     }
   };
 

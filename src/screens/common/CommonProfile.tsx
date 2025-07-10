@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import MyPackageCard from '../../components/MyPackageCards';
 import RecommendedCourseCard from '../../components/RecommendedCourseCard';
-import { myPackages, recommendedCourses } from './data';
+import { myPackages, recommendedCourses } from '../../screens/students/data';
 import { useNavigation } from '@react-navigation/native';
 import { MyPackage, RecommendedCourse } from '../../types/student';
 
-const StudentProfile = () => {
+const CommonProfile = () => {
   const navigation = useNavigation();
 
   return (
@@ -124,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StudentProfile;
+export default CommonProfile;

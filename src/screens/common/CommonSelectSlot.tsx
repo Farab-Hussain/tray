@@ -9,17 +9,15 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import ScreenHeader from '../common/ScreenHeader';
-<<<<<<< HEAD
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useAuthStore } from '../../store/authStore';
 
 type StudentStackParamList = {
   StudentTabs: undefined;
   SelectSlot: undefined;
   Cart: undefined;
 };
-=======
->>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
 
 const timeSlots = [
   '09:00 AM',
@@ -31,21 +29,22 @@ const timeSlots = [
   '04:00 PM',
 ];
 
-const SelectSlot = () => {
+const CommonSelectSlot = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState('');
-<<<<<<< HEAD
   const navigation = useNavigation<NativeStackNavigationProp<StudentStackParamList>>();
-=======
->>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
+  const { user } = useAuthStore();
 
   const onDateSelect = (day: any) => {
     setSelectedDate(day.dateString);
   };
 
+  const isConsultant = user?.role?.toLowerCase() === 'consultant';
+  const buttonLabel = isConsultant ? 'Save' : 'Book Now';
+
   return (
     <View style={styles.container}>
-      <ScreenHeader title="Select Slot" />
+      <ScreenHeader title={isConsultant ? 'Update Availability' : 'Select Slot'} />
       {/* Calendar */}
       <View style={styles.calendarWrapper}>
         <Calendar
@@ -94,7 +93,7 @@ const SelectSlot = () => {
         />
       </View>
 
-      {/* Book Now Button */}
+      {/* Book Now/Save Button */}
       <TouchableOpacity
         style={[
           styles.bookBtn,
@@ -102,21 +101,23 @@ const SelectSlot = () => {
         ]}
         disabled={!selectedDate || !selectedSlot}
         onPress={() => {
-          // handle booking logic here
-          console.log('Booked:', selectedDate, selectedSlot);
-<<<<<<< HEAD
-          navigation.navigate('Cart');
-=======
->>>>>>> d9a5a3ca8fb3730480360ec4646e6e1ff519c0de
+          if (isConsultant) {
+            // Save logic for consultant
+            console.log('Saved:', selectedDate, selectedSlot);
+          } else {
+            // Student: Book and go to Cart
+            console.log('Booked:', selectedDate, selectedSlot);
+            navigation.navigate('Cart');
+          }
         }}
       >
-        <Text style={styles.bookBtnText}>Book Now</Text>
+        <Text style={styles.bookBtnText}>{buttonLabel}</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default SelectSlot;
+export default CommonSelectSlot;
 
 const { width } = Dimensions.get('window');
 

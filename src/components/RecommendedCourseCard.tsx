@@ -31,7 +31,7 @@ const RecommendedCourseCard: React.FC<Props> = ({ data }) => {
       <Text style={style.para}>{data.description}</Text>
       <TouchableOpacity
         style={style.btn}
-        onPress={() => navigation.navigate('SelectSlot' as never)}
+        onPress={() => navigation.navigate('CommonSelectSlot' as never)}
       >
         <Text style={style.btnText}>Book Now</Text>
       </TouchableOpacity>

@@ -8,6 +8,7 @@ import { navigationRef } from './src/Navigation/RootNavigation';
 
 enableScreens();
 
+
 const App = () => {
   // Use Zustand selector pattern to ensure re-render on user change
   const user = useAuthStore(state => state.user);

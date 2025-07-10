@@ -4,6 +4,7 @@ import ScreenHeader from '../common/ScreenHeader';
 import { ChevronRight } from 'lucide-react-native';
 import { MailOpen, MessageCircle, Bell, HelpCircle, LogOut } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
+// import { navigationRef } from '../../Navigation/RootNavigation';
 
 const profile = {
   name: 'John Doe',
@@ -30,7 +31,7 @@ const Profile = () => {
         navigation.navigate('Conversations');
         break;
       case 'notifications':
-        navigation.navigate('Attendance');
+        navigation.navigate('NotificationScreen');
         break;
       case 'help':
         navigation.navigate('Help');
